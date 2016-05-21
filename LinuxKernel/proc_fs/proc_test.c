@@ -32,17 +32,19 @@ int proc_write_hello(struct file *file, const char *buffer, unsigned long count,
 }  
    
 static int __init proc_test_init(void) {  
-        example_dir = proc_mkdir("proc_test", NULL);  
-        hello_file = create_proc_entry("hello", S_IRUGO, example_dir);  
-        strcpy(global_buffer, "hello");  
-        hello_file->read_proc = proc_read_hello;  
-        hello_file->write_proc = proc_write_hello;  
+//        example_dir = proc_mkdir("proc_test", NULL);  
+        hello_file = create_proc_entry("hello", S_IRUGO, NULL);  
+        hello_file = create_proc_entry("hello", S_IRUGO, NULL);  
+//        strcpy(global_buffer, "hello");  
+//        hello_file->read_proc = proc_read_hello;  
+ //       hello_file->write_proc = proc_write_hello;  
+        remove_proc_entry("hello", NULL);  
         return 0;  
 }  
    
 static void __exit proc_test_exit(void) {  
-        remove_proc_entry("hello", example_dir);  
-        remove_proc_entry("proc_test", NULL);  
+//        remove_proc_entry("hello", example_dir);  
+//        remove_proc_entry("proc_test", NULL);  
 }  
 
 MODULE_LICENSE("GPL");

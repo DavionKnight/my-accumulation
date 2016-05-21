@@ -1,5 +1,5 @@
 obj-m :=  proc_test.o  
-KERNELDIR ?= ~/works/projects/NM81/lmxe-linux-2.6.29.6
+KERNELDIR ?= ~/works/projects/H20PN-2000/linux-2.6-cloud-2000
 
 PWD :=$(shell pwd)
 default:
