@@ -2,7 +2,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-#define UNIX_DOMAIN "MY_SOCKET"
+#define UNIX_DOMAIN "/dev/logtest"
 
 int main(void)
 {

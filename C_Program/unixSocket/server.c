@@ -26,7 +26,7 @@ int main()
                 int server_len,client_len;
                 struct sockaddr_un server_address;
                 struct sockaddr_un client_address;
-                const char path_unix[] = "MY_SOCKET";
+                const char path_unix[] = "/dev/logtest";
                 int len_unix;
                 char buf[1024];
                 int n;
