@@ -181,8 +181,8 @@ int main(uint argc, uchar **argv)
 			close(fdw);
 
 #if 1
-			/*if 3 file all transmit, the last seg should transmit a success flag*/
-			if((flag_all_end == 3) && (rwcount < BLOCK_SIZE))
+			/*if 3 file all transmit, the last seg should transmit a success flag, the last seg maybe 1. not full BLOCK_SIZE, 2. a full seg(but cout equal to frcompressedsize) */
+			if((flag_all_end == 3) && ((rwcount < BLOCK_SIZE)||(count == rec->frCompressedSize)))
 			{
 				ret = transmit_seg_data(fname, flag_head++, real_seg_size, 1);
 				if(ret != 0)
@@ -203,13 +203,13 @@ int main(uint argc, uchar **argv)
 			}
 #endif
 
-//			system("rm data.tmp -f");
 #endif
 		}
 
 	}while(1);
 
 	printf("end\n");
+	system("rm data.tmp -f");
 	close(fd);
 	system("rm tmp -rf");
 
