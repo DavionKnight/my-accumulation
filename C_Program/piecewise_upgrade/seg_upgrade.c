@@ -29,6 +29,34 @@ struct ZIPFILERECORD{
 
 int transmit_seg_data(unsigned char *fname, int flag_head, int pt_size, int success);
 
+int check_is_in_small_os(){
+	int ret = 0;
+	char *p;
+	char buf[100];
+	FILE *f = NULL;
+
+	ret = system("adb shell cat /proc/cmdline > cmdline.txt");
+	if(0 != ret)
+		return -2;
+	f = fopen("cmdline.txt", "r");
+	if(NULL == f)
+		return -2;
+
+	fgets(buf, sizeof(buf), f);
+
+	p = strstr(buf, "ubi.mtd=8");
+	if(NULL != p)
+		ret = 0;
+	else{
+		p = strstr(buf, "ubi.mtd=9");
+		if(NULL != p)
+			ret = 1;
+	}
+	fclose(f);
+	system("rm cmdline.txt");
+	return ret;
+}
+
 int main(uint argc, uchar **argv)
 {
 	unsigned char headbuf[512];	
@@ -55,6 +83,39 @@ int main(uint argc, uchar **argv)
 		printf("Use: ./seg_upgrade [file_name] [seg_size,default MB<1-100>]\n");
 		printf("eg.: ./seg_upgrade Duer_Dot_Speaker_v0.9.5-R_update.zip 1 \n");
 		return 0;
+	}
+
+	if(memcmp(argv[1], "small.zip",sizeof("small.zip"))){
+		int checknum = 0;
+		int flag_check = 0;
+		do{
+			ret = check_is_in_small_os();
+			printf("ret = %d\n",ret);
+			if(0 == ret){
+				system("adb shell upgrade_rollback");
+				system("adb shell reboot");
+				printf("wait small os startup...\n");
+				flag_check = 1;
+				sleep(20);
+				continue;
+			}
+			else if(1 == ret){
+				printf("Now in small OS, upgrade...\n");
+				sleep(1);
+				break;
+			}
+			else{
+				if(1 == flag_check)
+					printf("system starting... \n");
+				else
+					printf("Please check adb connect !!! \n");
+				sleep(10);
+			}
+		}while(checknum++ < 4);
+		if(4 <= checknum){
+			printf("please check adb connect, and retry\n");
+			return 0;
+		}
 	}
 
 	ret = system("mkdir tmp");
@@ -88,9 +149,9 @@ int main(uint argc, uchar **argv)
 	}
 
 	seg_size = atoi(argv[2]);
-	if(seg_size <= 0 || seg_size > 100)
+	if(seg_size <= 0 || seg_size > 10)
 	{
-		printf("Please input correct seg_size <1-100>\n");
+		printf("Please input correct seg_size <1-10>\n");
 		return 0;
 	}
 	printf("File name=%s, Seg_size=%dMB\n",argv[1], seg_size);
@@ -191,6 +252,8 @@ int main(uint argc, uchar **argv)
 					return -1;
 				}
 				printf("send end flag OK\n");
+				system("reboot");
+				break;
 			}
 			else
 			{
