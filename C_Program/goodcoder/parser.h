@@ -1,84 +1,52 @@
 #ifndef  __PARSER_H_
 #define  __PARSER_H_
 
-#include "user.h"
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
 #include <stdint.h>
 
-namespace parse
-{
-	int parse(const char* str, int* result);
-	int parse(const char* str, char* result);
-	int parse(const char* str, float* result);
-	int parse(const char* str, int num, int* result);
+namespace vocabulary_parse{
 
-	class Parser
-	{
-		static const int MAX_COLUMN = 1024;
+	enum para{
+		COLUMN_MAX = 32,
+		CHAR_MAX = 512,
+	};
 
-		const char* column_[MAX_COLUMN];
-		int column_num_;
+
+			int do_parse_column(const char* str, int* result);
+			int do_parse_column(const char* str, char* result);
+			int do_parse_column(const char* str, float* result);
+
+	class Parser{
 
 		public:
-		Parser()
-		{
-			memset(this, '\0', sizeof(*this));
-		}
+			Parser(){
+				_column_num = 0;
+			}
 
-		int parse_line(const char* line, const int column_num) 
-		{
+			int parse_line(const char* line, const int column_num);
+#if 0
+	        template<class T>
+			int parse_column(const int index, T* result);
+#endif
 
+	template <class T>
+	int parse_column(const int index, T* result){
 			int ret = 0;
-			column_num_ = column_num;
 
-			do
-			{
-				if (NULL == line || column_num <= 0)
-				{
-					ret = 1;
-					break;
-				}
-				int index = 0;
-				for (int i = 0; '\n' != line[i]; i++)
-				{
-					if (0 == i)
-					{
-						column_[index++] = &line[i];
-						//printf("%s\n", column_[0]);
-					}
-					else if ('\t' == line[i])
-					{
-						column_[index++] = &line[i+1];
-						//printf("%s\n", column_[index-1]);
-					}
-				}
-				if (column_num != index)
-				{
-					ret = 1;
-					break;
-				}
-			} while(0);
-			return ret;
-		};
-		template<class T>
-			int get_column(const int index, T* result)
-			{
-				int ret = 0;
-
-				if (index < column_num_)
-				{
-					ret = parse(column_[index], result);
-				}
-
-				else
-				{
-					ret = 1;
-				}
-
+			if((0 == _column_num) || (index >= _column_num)){
+				ret = 1;
 				return ret;
 			}
+			ret = do_parse_column(_column[index], result);
+
+			return ret;
+	}
+		private:
+			int _column_num;
+			const char *_column[COLUMN_MAX];
+
 
 	};
 }
