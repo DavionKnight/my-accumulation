@@ -82,6 +82,7 @@ int main(uint argc, uchar **argv)
 		printf("para num err\n");
 		printf("Use: ./seg_upgrade [file_name] [seg_size,default MB<1-100>]\n");
 		printf("eg.: ./seg_upgrade Duer_Dot_Speaker_v0.9.5-R_update.zip 1 \n");
+		printf("eg.: ./seg_upgrade small.zip 1 \n");
 		return 0;
 	}
 
@@ -96,11 +97,14 @@ int main(uint argc, uchar **argv)
 				system("adb shell reboot");
 				printf("wait small os startup...\n");
 				flag_check = 1;
-				sleep(20);
+				sleep(10);
 				continue;
 			}
 			else if(1 == ret){
 				printf("Now in small OS, upgrade...\n");
+				system("adb shell killall upgrade_seg");
+				system("adb shell killall upgrade_seg");
+				system("adb shell killall upgrade_seg");
 				sleep(1);
 				break;
 			}
@@ -108,11 +112,11 @@ int main(uint argc, uchar **argv)
 				if(1 == flag_check)
 					printf("system starting... \n");
 				else
-					printf("Please check adb connect !!! \n");
-				sleep(10);
+					printf("Please wait system start !!! \n");
+				sleep(1);
 			}
-		}while(checknum++ < 4);
-		if(4 <= checknum){
+		}while(checknum++ < 100);
+		if(100 <= checknum){
 			printf("please check adb connect, and retry\n");
 			return 0;
 		}
@@ -121,8 +125,9 @@ int main(uint argc, uchar **argv)
 	ret = system("mkdir tmp");
 	if(0 != ret)
 	{
-		printf("mkdir tmp error\n");
-		return 0;
+//		printf("mkdir tmp error\n");
+//		return 0;
+		system("rm tmp -rf");
 	}
 	sprintf(fname, "unzip %s -d tmp", argv[1]);
 	ret = system(fname);
@@ -252,7 +257,7 @@ int main(uint argc, uchar **argv)
 					return -1;
 				}
 				printf("send end flag OK\n");
-				system("reboot");
+				system("adb shell reboot");
 				break;
 			}
 			else
