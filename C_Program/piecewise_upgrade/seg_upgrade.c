@@ -127,7 +127,7 @@ int main(uint argc, uchar **argv)
 	{
 //		printf("mkdir tmp error\n");
 //		return 0;
-		system("rm tmp -rf");
+		system("rm -rf tmp");
 	}
 	sprintf(fname, "unzip %s -d tmp", argv[1]);
 	ret = system(fname);
@@ -277,9 +277,9 @@ int main(uint argc, uchar **argv)
 	}while(1);
 
 	printf("end\n");
-	system("rm data.tmp -f");
+	system("rm -f data.tmp");
 	close(fd);
-	system("rm tmp -rf");
+	system("rm -rf tmp");
 
 	return 0;
 	
