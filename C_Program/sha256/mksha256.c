@@ -31,6 +31,7 @@ void StrToHex(unsigned char *pbDest, unsigned char *pbSrc, int nLen)
 	unsigned char s1,s2;
 	unsigned int i;
 
+	printf("nLen=%d\n",nLen);
 	for (i=0; i<nLen; i++)
 	{
 		h1 = pbSrc[2*i];
@@ -45,7 +46,6 @@ void StrToHex(unsigned char *pbDest, unsigned char *pbSrc, int nLen)
 			s2 -= 7;
 
 		pbDest[i] = s1*16 + s2;
-//		printf("pbDest[%d]=%02x\n",i,pbDest[i]);
 	}
 }
 /* a fast way to get file size */
@@ -61,16 +61,18 @@ int file_size(char* filename)
 unsigned char *GetFilename(unsigned char *p)
 {
     char ch = '/';
-    unsigned char *q = strrchr(p,ch) + 1;
- 
-    return q;
+    unsigned char *q = strrchr(p,ch);
+	if(NULL != q)
+		return q+1;
+	else
+		return q;
 }
 
 #define RDLEN     512
 int main(int argc, unsigned char *argv[])
 {
 	unsigned char sha256_32[32];
-	unsigned char sha256_64[64];
+	unsigned char sha256_64[65];
 	unsigned char cmdline[200];
 	unsigned char newfile[100];
 	unsigned char newfile1[100];
@@ -105,7 +107,7 @@ int main(int argc, unsigned char *argv[])
 		printf("%d, err\n",__LINE__);
 		return -1;
 	}
-	fgets(sha256_64, 64, fp);
+	fgets(sha256_64, 65, fp);
 	fclose(fp);
 	StrToHex(sha256_32, sha256_64, 32);
 	system("rm ./sha256.txt");
@@ -116,13 +118,13 @@ int main(int argc, unsigned char *argv[])
 	memcpy(newfile, argv[1], sizeof(newfile));
 	fname = GetFilename(newfile);
 	if(NULL == fname) {
-		snprintf(newfile1, 100, "sha256-%s", fname);
+		snprintf(newfile1, 100, "sha256-%s", newfile);
 		memset(newfile, 0, sizeof(newfile));
-		memcpy(newfile, newfile1, sizeof(newfile1));
+		memcpy(newfile, newfile1, strlen(newfile1)+1);
 	}
 	else {
 		snprintf(newfile1, 100, "sha256-%s", fname);
-		memcpy(fname, newfile1, sizeof(newfile1));
+		memcpy(fname, newfile1, strlen(newfile1)+1);
 	}
 	printf("new file name: %s\n",newfile);
 	if(!access(newfile, 0)) {
