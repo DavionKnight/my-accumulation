@@ -445,7 +445,7 @@ let g:tagbar_type_typescript = {
 let g:tagbar_sort = 0  "设置标签不排序，默认排序
 
 " maps for Tagbar and Ctags
-nmap <C-t> :TagbarToggle<CR>
+nmap <Leader>t :TagbarToggle<CR>
 let g:tagbar_ctags_bin='/usr/bin/ctags'  " 设置ctags所在路径
 autocmd BufReadPost *.rb,*.sh,*.py,*.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen() " 在某些情况下自动打开tagbar
 nnoremap <C-n> :NERDTreeToggle<cr>
