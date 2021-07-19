@@ -131,8 +131,21 @@ set wrap
 " Autoload NERDTree if no file specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif | wincmd w
-autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd w
+"autocmd VimEnter * NERDTree
+autocmd VimEnter * NERDTree | wincmd p
+" Open the existing NERDTree on each new tab.
+autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
+" Mirror the NERDTree before showing it. This makes it the same on all tabs.
+nnoremap <C-n> :NERDTreeMirror<CR>:NERDTreeFocus<CR>
+
+" Close the tab if NERDTree is the only window remaining in it.
+autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+
+
+
 
 let NERDTreeWinPos="right"
 " Show hidden files in NERDTree
@@ -145,8 +158,8 @@ let g:NERDTreeWinSize=40
 " Auto close NERDTree if no more files
 autocmd BufEnter * if 0 == len(filter(range(1, winnr('$')), 'empty(getbufvar(winbufnr(v:val), "&bt"))')) | qa! | endif
 "NERDTree-Tabs
-"let g:nerdtree_tabs_open_on_console_startup=1       "设置打开vim的时候默认打开目录树
-"let NERDTreeMapOpenInTab='<ENTER>'
+let g:nerdtree_tabs_open_on_console_startup=1       "设置打开vim的时候默认打开目录树
+let NERDTreeMapOpenInTab='<ENTER>'
 
 " enable copy to clipboard
 "set clipboard+=unnamed
@@ -346,8 +359,8 @@ let g:EasyMotion_use_upper = 1
 let g:EasyMotion_keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ;'
 nmap f <Plug>(easymotion-f)
 nmap F <Plug>(easymotion-F)
-nmap t <Plug>(easymotion-t)
-nmap T <Plug>(easymotion-T)
+"nmap t <Plug>(easymotion-t)
+"nmap T <Plug>(easymotion-T)
 nmap ? <Plug>(easymotion-repeat)
 nmap / <Plug>(easymotion-sn)
 "nmap n <Plug>(easymotion-next)
