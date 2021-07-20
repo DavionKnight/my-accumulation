@@ -1,13 +1,17 @@
 ## Shortcuts
 ### 常用操作
-* [leader] + num    #切换到第num个标签
-* [leader] + m      #高亮当前代码
-* [leader] + n      #取消当前高亮
-* [leader] + mc     #取消所有高亮
-* [leader] + *      #跳转到当前高亮的下一个单词
-* [leader] + #      #跳转到当前高亮的上一个单词
-\# 跳转到当前高亮的上一个单词
-* F8            #在浏览器打开Markdown预览
+* [leader] + num   &emsp;&emsp;&emsp;切换到第num个标签
+* [leader] + m     &emsp;&emsp;&emsp;高亮当前代码
+* [leader] + n     &emsp;&emsp;&emsp;取消当前高亮
+* [leader] + mc    &emsp;&emsp;&emsp;取消所有高亮
+* [leader] + *     &emsp;&emsp;&emsp;跳转到当前高亮的下一个单词
+* [leader] + #     &emsp;&emsp;&emsp;跳转到当前高亮的上一个单词
+* [leader] + gb    &emsp;&emsp;&emsp;git blame
+* [leader] + gd    &emsp;&emsp;&emsp;git diff
+* [leader] + gs    &emsp;&emsp;&emsp;git status
+---
+* [leader] + vv    &emsp;&emsp;&emsp;grep -rn
+* F8                &emsp;&emsp;&emsp;在浏览器打开Markdown预览
 ---
 ### Nerdtree常用操作
 * o: 打开一个目录或者打开文件，非常重要，避免nerdtree引入的多标签问题
