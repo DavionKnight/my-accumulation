@@ -23,9 +23,15 @@
 
 ## Release
 
+### 2021.07.21
+1. 修复nerdtree打开新文件时，原tab名字变为’NERD_tree'问题
+ * 新增vim-nerdtree-tabs
+ * let g:nerdtree_tabs_meaningful_tab_names = 1
+2. 美化nerdtree字体
+
 ### 2021.07.19
 1. 修复nerdtree打开目录时多开一个tab的问题
-* 通过o打开目录可解决
+ * 通过o打开目录可解决
 2. 添加常用快捷键表
 
 ### 2021.07.16
@@ -46,6 +52,15 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 ```bash
 sudo apt-get install vim-gtk
 ```
+3. make nerdtree beauty
+ * 1) download otf
+```bash
+mkdir -p ~/.local/share/fonts
+cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Complete.otf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
+```
+ * 2) get otf and install
+ * 3) set terminal font choice ‘Droid Sans Mono Nerd'
+
 
 ### zsh configurations
 

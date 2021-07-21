@@ -30,7 +30,8 @@ Plugin 'tpope/vim-fugitive'
 
 "From here other plugins from the original Vundle config
 Plugin 'scrooloose/nerdtree'        
-"Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'ryanoasis/vim-devicons'
 Plugin 'groenewege/vim-less'
 Plugin 'airblade/vim-gitgutter'
 
@@ -39,7 +40,7 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-surround'
 "Plugin 'python-mode/python-mode'
 Plugin 'klen/python-mode'
-Plugin 'vim-scripts/ctrlp.vim', { 'on': ctrlp_cmds }
+Plugin 'ctrlpvim/ctrlp.vim', { 'on': ctrlp_cmds }
 Plugin 'tacahiroy/ctrlp-funky', { 'on': ctrlp_cmds }
 Plugin 'vim-scripts/supertab'
 Plugin 'majutsushi/tagbar'
@@ -142,9 +143,7 @@ nnoremap <C-n> :NERDTreeMirror<CR>:NERDTreeFocus<CR>
 autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 " Exit Vim if NERDTree is the only window remaining in the only tab.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-
-
-
+let g:nerdtree_tabs_meaningful_tab_names = 1
 
 
 let NERDTreeWinPos="right"
@@ -160,6 +159,7 @@ autocmd BufEnter * if 0 == len(filter(range(1, winnr('$')), 'empty(getbufvar(win
 "NERDTree-Tabs
 let g:nerdtree_tabs_open_on_console_startup=1       "设置打开vim的时候默认打开目录树
 let NERDTreeMapOpenInTab='<ENTER>'
+set guifont=DroidSansMono_Nerd_Font
 
 " enable copy to clipboard
 "set clipboard+=unnamed
@@ -458,7 +458,7 @@ let g:tagbar_type_typescript = {
 let g:tagbar_sort = 0  "设置标签不排序，默认排序
 
 " maps for Tagbar and Ctags
-nmap <Leader>t :TagbarToggle<CR>
+nmap <C-t> :TagbarToggle<CR>
 let g:tagbar_ctags_bin='/usr/bin/ctags'  " 设置ctags所在路径
 autocmd BufReadPost *.rb,*.sh,*.py,*.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen() " 在某些情况下自动打开tagbar
 nnoremap <C-n> :NERDTreeToggle<cr>
