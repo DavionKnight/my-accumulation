@@ -468,6 +468,11 @@ inoremap <C-l> <Right>
 inoremap <C-h> <Left>
 inoremap <C-k> <Up>
 inoremap <C-j> <Down>
+"split navigations
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
 
 " leaderF don't show the help in normal mode
 let g:Lf_HideHelp = 1

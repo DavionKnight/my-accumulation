@@ -9,10 +9,8 @@
 * [leader] + gb    &emsp;&emsp;&emsp;git blame
 * [leader] + gd    &emsp;&emsp;&emsp;git diff
 * [leader] + gs    &emsp;&emsp;&emsp;git status
----
 * [leader] + vv    &emsp;&emsp;&emsp;grep -rn
 * F8                &emsp;&emsp;&emsp;在浏览器打开Markdown预览
----
 ### Nerdtree常用操作
 * o: 打开一个目录或者打开文件，非常重要，避免nerdtree引入的多标签问题
 * C: 将根路径设置为光标所在的目录
@@ -20,24 +18,6 @@
 * U: 设置上级目录为根路径，但是维持原来目录打开的状态
 * m: 显示文件系统菜单(可以以UI方式打开文件夹,复制路径等)
 ---
-
-## Release
-
-### 2021.07.21
-1. 修复nerdtree打开新文件时，原tab名字变为’NERD_tree'问题
- * 新增vim-nerdtree-tabs
- * let g:nerdtree_tabs_meaningful_tab_names = 1
-2. 美化nerdtree字体
-
-### 2021.07.19
-1. 修复nerdtree打开目录时多开一个tab的问题
- * 通过o打开目录可解决
-2. 添加常用快捷键表
-
-### 2021.07.16
-1. support tab and tab operations
-2. add Markdown and preview
-3. add python-mode
 
 
 ## Depends
@@ -76,4 +56,32 @@ unsetopt share_history
 unsetopt inc_append_history
 ```
 
+### cscope support python
+```bash
+find ./ -name '*.py' > ./cscope.files
+cscope -Rbqk
+```
+---
+
+## ReleaseNote
+
+### 2021.07.27
+1. 切换窗口修改为ctrl+h/j/k/l
+2. cscope支持python
+
+### 2021.07.21
+1. 修复nerdtree打开新文件时，原tab名字变为’NERD_tree'问题
+ * 新增vim-nerdtree-tabs
+ * let g:nerdtree_tabs_meaningful_tab_names = 1
+2. 美化nerdtree字体
+
+### 2021.07.19
+1. 修复nerdtree打开目录时多开一个tab的问题
+ * 通过o打开目录可解决
+2. 添加常用快捷键表
+
+### 2021.07.16
+1. support tab and tab operations
+2. add Markdown and preview
+3. add python-mode
 
