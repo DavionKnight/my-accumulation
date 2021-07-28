@@ -10,6 +10,7 @@
 * [leader] + gd    &emsp;&emsp;&emsp;git diff
 * [leader] + gs    &emsp;&emsp;&emsp;git status
 * [leader] + vv    &emsp;&emsp;&emsp;grep -rn
+* [Ctrl+]]         &emsp;&emsp;&emsp;&emsp;next tab
 * F8                &emsp;&emsp;&emsp;在浏览器打开Markdown预览
 ### Nerdtree常用操作
 * o: 打开一个目录或者打开文件，非常重要，避免nerdtree引入的多标签问题
@@ -64,6 +65,12 @@ cscope -Rbqk
 ---
 
 ## ReleaseNote
+
+### 2021.07.28
+1. vim有些键是绑死的，映射一个另一个会跟着变，如
+ * tab与ctrl+i是绑死的,因此下一个tab修改为ctrl+](尽量用ctrl，因为ctrl一直按着也生效)
+ * ctrl+[与esc是绑死的,取消tab privous,尽量习惯用leader+数字切换标签
+2. 取消tab close，:q可以替代
 
 ### 2021.07.27
 1. 切换窗口修改为ctrl+h/j/k/l
