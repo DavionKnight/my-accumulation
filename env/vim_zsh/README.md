@@ -11,7 +11,7 @@
 * [leader] + gs    &emsp;&emsp;&emsp;git status
 * [leader] + vv    &emsp;&emsp;&emsp;grep -rn
 * [Ctrl+L]         &emsp;&emsp;&emsp;&emsp;next tab
-* [Ctrl+H]         &emsp;&emsp;&emsp;&emsp;next tab
+* [Ctrl+H]         &emsp;&emsp;&emsp;&emsp;privous tab
 * F8                &emsp;&emsp;&emsp;在浏览器打开Markdown预览
 ### Nerdtree常用操作
 * o: 打开一个目录或者打开文件，非常重要，避免nerdtree引入的多标签问题
@@ -26,17 +26,17 @@
 
 ### vim configurations
 
-1. install vundle  
+#### 1. install vundle  
 ```bash
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 ```
 
-2. support clipboard
+#### 2. support clipboard
 ```bash
 sudo apt-get install vim-gtk
 ```
 
-3. make nerdtree beauty
+#### 3. make nerdtree beauty
  * 1) download otf
 ```bash
 mkdir -p ~/.local/share/fonts
@@ -45,14 +45,14 @@ cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Co
  * 2) get otf and install
  * 3) set terminal font choice ‘Droid Sans Mono Nerd'
 
-4. Use sshkey to access github without username and passwd
-1) gen ssh key
+#### 4. Use sshkey to access github without username and passwd
+ * 1) gen ssh key
 ```bash
     ssh-keygen -t rsa -b 4096 -C "你的邮箱"
 ```
    do not overwrite system default rsakey ~/.ssh/id_rsa, just save in current path
-2) copy public key to github
-3) set local github default private key in ~/.ssh/config
+ * 2) copy public key to github
+ * 3) set local github default private key in ~/.ssh/config
 ```bash
 Host github.com
     HostName github.com
