@@ -46,10 +46,13 @@ cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Co
  * 3) set terminal font choice ‘Droid Sans Mono Nerd'
 
 4. Use sshkey to access github without username and passwd
+1) gen ssh key
 ```bash
     ssh-keygen -t rsa -b 4096 -C "你的邮箱"
 ```
    do not overwrite system default rsakey ~/.ssh/id_rsa, just save in current path
+2) copy public key to github
+3) set local github default private key in ~/.ssh/config
 ```bash
 Host github.com
     HostName github.com
