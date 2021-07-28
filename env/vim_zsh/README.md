@@ -10,7 +10,8 @@
 * [leader] + gd    &emsp;&emsp;&emsp;git diff
 * [leader] + gs    &emsp;&emsp;&emsp;git status
 * [leader] + vv    &emsp;&emsp;&emsp;grep -rn
-* [Ctrl+]]         &emsp;&emsp;&emsp;&emsp;next tab
+* [Ctrl+L]         &emsp;&emsp;&emsp;&emsp;next tab
+* [Ctrl+H]         &emsp;&emsp;&emsp;&emsp;next tab
 * F8                &emsp;&emsp;&emsp;在浏览器打开Markdown预览
 ### Nerdtree常用操作
 * o: 打开一个目录或者打开文件，非常重要，避免nerdtree引入的多标签问题
@@ -29,10 +30,12 @@
 ```bash
 git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 ```
+
 2. support clipboard
 ```bash
 sudo apt-get install vim-gtk
 ```
+
 3. make nerdtree beauty
  * 1) download otf
 ```bash
@@ -41,6 +44,20 @@ cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Co
 ```
  * 2) get otf and install
  * 3) set terminal font choice ‘Droid Sans Mono Nerd'
+
+4. Use sshkey to access github without username and passwd
+```bash
+    ssh-keygen -t rsa -b 4096 -C "你的邮箱"
+```
+   do not overwrite system default rsakey ~/.ssh/id_rsa, just save in current path
+```bash
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile /home/meteor/.ssh/id_rsa.github
+    IdentitiesOnly yes
+```
+
 
 
 ### zsh configurations
@@ -65,6 +82,12 @@ cscope -Rbqk
 ---
 
 ## ReleaseNote
+
+### 2021.07.28
+1. 因为ctrl+]与函数跳转冲突，找到一个更好替代快捷键
+ * ctrl+L tab next
+ * ctrl+H tab privous
+2. 关闭切换窗口快捷键
 
 ### 2021.07.28
 1. vim有些键是绑死的，映射一个另一个会跟着变，如

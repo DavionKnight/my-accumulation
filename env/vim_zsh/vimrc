@@ -235,15 +235,15 @@ hi CursorLine term=bold ctermfg=214 ctermbg=237 guifg=#fabd2f guibg=#3c3836
 nnoremap <leader>c :set cursorline!<cr>
 
 " tab
-nmap <C-]> :tabn<cr> "设置tab键映射"
-"nmap <C-[> :tabp<cr> "设置tab键映射"
+nmap <C-l> :tabn<cr> "设置tab键映射"
+nmap <C-h> :tabp<cr> "设置tab键映射"
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 " map <leader>tc :tabclose<cr> "use :q
 " Opens a new tab with the current buffer's path
 " Super useful when editing files in the same directory
-map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+" map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/ "just use nerdtree
 map <leader>1 1gt
 map <leader>2 2gt
 map <leader>3 3gt
@@ -469,10 +469,10 @@ inoremap <C-h> <Left>
 inoremap <C-k> <Up>
 inoremap <C-j> <Down>
 "split navigations
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+"nnoremap <C-J> <C-W><C-J>
+"nnoremap <C-K> <C-W><C-K>
+"nnoremap <C-L> <C-W><C-L>
+"nnoremap <C-H> <C-W><C-H>
 
 " leaderF don't show the help in normal mode
 let g:Lf_HideHelp = 1
