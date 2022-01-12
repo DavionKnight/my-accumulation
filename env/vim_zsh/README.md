@@ -33,7 +33,8 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 #### 2. support clipboard
 ```bash
-sudo apt-get install vim-gtk
+sudo apt-get install vim-gtk vim-gnome -y
+vim --version | grep "clipboard"
 ```
 
 #### 3. make nerdtree beauty
@@ -59,6 +60,10 @@ Host github.com
     User git
     IdentityFile /home/meteor/.ssh/id_rsa.github
     IdentitiesOnly yes
+```
+#### 5. install ag searcher
+```bash
+    apt-get install silversearcher-ag
 ```
 
 
