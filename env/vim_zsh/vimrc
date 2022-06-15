@@ -257,7 +257,7 @@ map <leader>0 :tablast<CR>
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf8
-set fileencodings=utf8,gbk,gb2312
+set fileencodings=utf8,gbk,gb2312,utf-16le
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
