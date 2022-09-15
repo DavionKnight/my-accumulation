@@ -1,0 +1,111 @@
+#!/bin/bash
+
+if [ $# != 1 ];then
+    echo "Please Input a log txt"
+    exit
+fi
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+
+file=$1
+
+FILE_UTF16=$(file $1 | grep -i "utf-16")
+if [[ "$FILE_UTF16" != "" ]];then
+    echo "file format utf-16"
+    iconv -f utf-16le -t utf-8 $1 > utf8-$1
+    file=utf8-$1
+fi
+
+grep -ainE "stlog:" ${file} --color=auto
+
+echo ""
+echo -e "=======================================================\n"
+echo ""
+
+#permissive=0'
+KEY="
+'Stationservice: L1:Starting'
+'camera res'
+'enterpairing'
+'stoppairing'
+'usbpairing'
+'system_vrmode'
+'\[mcu\]powero'
+'devinfo:'
+'come in wakeup'
+'come in sleep'
+'gotosleep,'
+'left controller connected'
+'right controller connected'
+'get_imu_cali_thread'
+'controller disconnect'
+'camerainit'
+'camerastreamctrl'
+'>>> \/'
+'reset station'
+'scontext=u:r:stationservice:s0'
+'tcontext=u:r:stationservice:s0'
+'stationclient_test'
+'stationexceptionreset'
+'initSharedMemory, mmap_fd=-'
+'updatefw'
+'stationbootromstart'
+'stationotastart'
+'updatefw'
+'----controller upgrade---'
+'controller: /storage/emulated'
+'bootrom'
+'do_inplay618_controller_update'
+'do_inplay618_station_update'
+'bb 01 01'
+"
+
+#'mControllerStillFlag_'
+KEYWORDS=`echo -e ${KEY} | sed "s/' '/|/g"`
+KEYWORDS=`echo -e ${KEYWORDS} | sed "s/'//g"`
+echo $KEYWORDS
+grep -ainE "${KEYWORDS}" ${file} --color=auto
+
+
+
+fileo=ss.${file}
+grep -aiE "${KEYWORDS}|stationservice|stationclient" ${file} > ${fileo}
+
+echo ""
+echo -e "=======================================================\n"
+OS_VERSION=`grep -aiE 'os_rom_version' ${file} | head -n 1`
+OS_VERSION=`echo -e ${OS_VERSION} | sed 's/"//g'`
+OS_VERSION=`echo -e ${OS_VERSION} | sed 's/:/=/g'`
+OS_VERSION=`echo -e ${OS_VERSION} | sed 's/&/,/g'`
+OS_VERSION=`echo ${OS_VERSION#*os_rom_version=}`
+OS_VERSION=${OS_VERSION%%,*}
+echo "OS_VERSION:${OS_VERSION}"
+
+
+#STAION_VERSION=`grep -aiE 'DEVINFO:' ${file} | head -n 1`
+#STAION_VERSION=`echo ${STAION_VERSION#*DEVINFO:}`
+#echo "STATION_VERSION:$STAION_VERSION"
+
+STAION_VERSION_ORI=`grep -aiE 'DEVINFO:' ${file}`
+for i in $STAION_VERSION_ORI
+do
+    STATION_VER=`echo ${i#*DEVINFO:}`
+    res=$(echo $STAION_VERSION | grep "${STATION_VER}")
+    if [[ "$res" = "" ]];then
+        if [[ $STAION_VERSION = "" ]];then
+            STAION_VERSION=${STATION_VER}
+        else
+            STAION_VERSION=${STAION_VERSION},${STATION_VER}
+        fi
+    fi
+done
+
+STAION_VERSION=`echo ${STAION_VERSION}`
+echo "STATION_VERSION:$STAION_VERSION"
+
+echo ""
+echo "output in ${fileo}"
+
+
+IFS=$SAVEIFS
+
