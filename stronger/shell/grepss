@@ -7,7 +7,14 @@ fi
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
 
-file=$1
+
+if [ $1 = '.' ];
+then
+    ls aplog*|sort -r | xargs cat >> a.txt
+    file=a.txt
+else
+    file=$1
+fi
 
 FILE_UTF16=$(file $1 | grep -i "utf-16")
 if [[ "$FILE_UTF16" != "" ]];then
@@ -55,6 +62,7 @@ KEY="
 '----controller upgrade---'
 'controller: /storage/emulated'
 'bootrom'
+'pairmode'
 'do_inplay618_controller_update'
 'do_inplay618_station_update'
 'bb 01 01'
@@ -73,19 +81,23 @@ grep -aiE "${KEYWORDS}|stationservice|stationclient" ${file} > ${fileo}
 
 echo ""
 echo -e "=======================================================\n"
+
+#0. hardware info
+KEY_H="come in wakeup, "
+OS_VERSION=`grep -aiE $KEY_H ${file} | head -n 1`
+OS_VERSION=`echo ${OS_VERSION#*come in wakeup, }`
+echo -e "\033[32mHW_INFO = ${OS_VERSION} \033[0m"
+
+#1. os version
 OS_VERSION=`grep -aiE 'os_rom_version' ${file} | head -n 1`
 OS_VERSION=`echo -e ${OS_VERSION} | sed 's/"//g'`
 OS_VERSION=`echo -e ${OS_VERSION} | sed 's/:/=/g'`
 OS_VERSION=`echo -e ${OS_VERSION} | sed 's/&/,/g'`
 OS_VERSION=`echo ${OS_VERSION#*os_rom_version=}`
 OS_VERSION=${OS_VERSION%%,*}
-echo "OS_VERSION:${OS_VERSION}"
+echo -e "\033[32mOS_VERSION = ${OS_VERSION}\033[0m"
 
-
-#STAION_VERSION=`grep -aiE 'DEVINFO:' ${file} | head -n 1`
-#STAION_VERSION=`echo ${STAION_VERSION#*DEVINFO:}`
-#echo "STATION_VERSION:$STAION_VERSION"
-
+#2. station version
 STAION_VERSION_ORI=`grep -aiE 'DEVINFO:' ${file}`
 for i in $STAION_VERSION_ORI
 do
@@ -93,17 +105,58 @@ do
     res=$(echo $STAION_VERSION | grep "${STATION_VER}")
     if [[ "$res" = "" ]];then
         if [[ $STAION_VERSION = "" ]];then
-            STAION_VERSION=${STATION_VER}
+            STAION_VERSION=${STATION_VER: 0:6}
         else
-            STAION_VERSION=${STAION_VERSION},${STATION_VER}
+            STAION_VERSION=${STAION_VERSION},${STATION_VER: 0:6}
         fi
     fi
 done
+echo -e "\033[32mSTATION_VERSION = $STAION_VERSION \033[0m"
 
-STAION_VERSION=`echo ${STAION_VERSION}`
-echo "STATION_VERSION:$STAION_VERSION"
+#3. left controller version
+TEMP=""
+RESULT=""
+ORI=`grep -aiE 'get_imu_cali_thread left' ${file}`
+for i in $ORI
+do
+    TEMP=`echo ${i#*sw:}`
+    TEMP=`echo ${TEMP%%,*}`
+    res=$(echo $RESULT | grep "${TEMP}")
+    if [[ "$res" = "" ]];then
+        if [[ $RESULT = "" ]];then
+            RESULT=${TEMP: 0:6}
+        else
+            RESULT=${RESULT},${TEMP: 0:6}
+        fi
+    fi
+done
+echo -e "\033[32mLEFT = \t\t$RESULT\033[0m"
 
+#4. right controller version
+TEMP=""
+RESULT=""
+ORI=`grep -aiE 'get_imu_cali_thread right' ${file}`
+for i in $ORI
+do
+    TEMP=`echo ${i#*sw:}`
+    TEMP=`echo ${TEMP%%,*}`
+    res=$(echo $RESULT | grep "${TEMP}")
+    if [[ "$res" = "" ]];then
+        if [[ $RESULT = "" ]];then
+            RESULT=${TEMP: 0:6}
+        else
+            RESULT=${RESULT},${TEMP: 0:6}
+        fi
+    fi
+done
+echo -e "\033[32mRIGHT = $RESULT\033[0m"
 echo ""
+TEMP=`grep -aiE 'get_imu_cali_thread left' ${file} | head -n1`
+echo "${TEMP#*get_imu_cali_thread}"
+TEMP=`grep -aiE 'get_imu_cali_thread right' ${file} | head -n1`
+echo "${TEMP#*get_imu_cali_thread}"
+
+
 echo "output in ${fileo}"
 
 
