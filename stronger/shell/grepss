@@ -1,5 +1,8 @@
 #!/bin/bash
 
+SAVEIFS=$IFS
+IFS=$(echo -en "\n\b")
+
 trans_2_utf8() {
 file=$1
 FILE_UTF16=$(file $1 | grep -i "utf-16")
@@ -33,7 +36,7 @@ do
         fi
     fi
 done
-echo -e "\033[32mLEFT: \t\t$RESULT\033[0m"
+echo -e "\033[32m LEFT: \t\t$RESULT\033[0m"
 
 #4. right controller version
 TEMP=""
@@ -52,7 +55,7 @@ do
         fi
     fi
 done
-echo -e "\033[32mRIGHT: \t\t$RESULT\033[0m"
+echo -e "\033[32m RIGHT: \t\t$RESULT\033[0m"
 echo ""
 TEMP=`grep -aiE $LEFT_KEYWORD ${file} | head -n1`
 echo "${TEMP#*$CONTROLLER_KEYWORD}"
@@ -82,16 +85,14 @@ file=`trans_2_utf8 $1`
 
 echo "Input $# files"
 
-SAVEIFS=$IFS
-IFS=$(echo -en "\n\b")
-
-grep -ainE "stlog:" ${file} --color=auto
+grep -ainE ":stlog:" ${file} --color=auto
 
 echo ""
 echo -e "=======================================================\n"
 echo ""
 
 #permissive=0'
+#'bb 01 01'
 KEY="
 'Stationservice: L1:Starting'
 'camera res'
@@ -131,7 +132,17 @@ KEY="
 'pairmode'
 'do_inplay618_controller_update'
 'do_inplay618_station_update'
-'bb 01 01'
+'do_inplay618_station_update'
+'RBWrite overflow RightShift'
+'RBWrite overflow RightShift'
+'GetCalibrationFromStation:mcu recv wrong'
+'get calibration data successfully'
+':aa 01 04 01'
+']bb 01 04 01'
+']a5 02 01'
+']a5 02 02'
+']a5 07 00'
+']a5 06 '
 "
 
 #'mControllerStillFlag_'
@@ -153,7 +164,7 @@ echo -e "=======================================================\n"
 KEY_H="come in wakeup, "
 OS_VERSION=`grep -aiE $KEY_H ${file} | head -n 1`
 OS_VERSION=`echo ${OS_VERSION#*come in wakeup, }`
-echo -e "\033[32mHW_INFO: \t${OS_VERSION} \033[0m"
+echo -e "\033[32m HW_INFO: \t${OS_VERSION} \033[0m"
 
 #1. os version
 OS_VERSION=`grep -aiE 'os_rom_version' ${file} | head -n 1`
@@ -162,14 +173,14 @@ OS_VERSION=`echo -e ${OS_VERSION} | sed 's/:/=/g'`
 OS_VERSION=`echo -e ${OS_VERSION} | sed 's/&/,/g'`
 OS_VERSION=`echo ${OS_VERSION#*os_rom_version=}`
 OS_VERSION=${OS_VERSION%%,*}
-echo -e "\033[32mOS_VERSION: \t${OS_VERSION}\033[0m"
+echo -e "\033[32m OS_VERSION: \t${OS_VERSION}\033[0m"
 
 #2. station version
 STATION_KEYWORD="DEVINFO:"
-STAION_VERSION_ORI=`grep -aE $STATION_KEYWORD ${file}`
+STAION_VERSION_ORI=`grep -aE $STATION_KEYWORD ${file} | sort -u`
 for i in $STAION_VERSION_ORI
 do
-    STATION_VER=`echo ${i#*$STATION_KEYWORD}`
+    STATION_VER=`echo ${i#*$STATION_KEYWORD} | tr -d " "`
     #ignore null line
     if [[ $STATION_VER = "" ]];then
         continue
@@ -184,7 +195,7 @@ do
         fi
     fi
 done
-echo -e "\033[32mSTATION: \t$STATION_VERSION \033[0m"
+echo -e "\033[32m STATION: \t$STATION_VERSION \033[0m"
 
 CONTROLLER_KEYWORD="controller info:"
 ORI=`grep -aiE $CONTROLLER_KEYWORD ${file}`
