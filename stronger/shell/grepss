@@ -118,6 +118,7 @@ KEY="
 'scontext=u:r:stationservice:s0'
 'tcontext=u:r:stationservice:s0'
 'stationclient_test'
+'Stationclienttest'
 'stationexceptionreset'
 'initSharedMemory, mmap_fd=-'
 'updatefw'
@@ -137,12 +138,14 @@ KEY="
 'RBWrite overflow RightShift'
 'GetCalibrationFromStation:mcu recv wrong'
 'get calibration data successfully'
+'================6dof camera'
 ':aa 01 04 01'
 ']bb 01 04 01'
 ']a5 02 01'
 ']a5 02 02'
 ']a5 07 00'
 ']a5 06 '
+'qcom,qup_uart'
 "
 
 #'mControllerStillFlag_'
