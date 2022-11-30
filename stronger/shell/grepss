@@ -4,63 +4,74 @@ SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
 
 trans_2_utf8() {
-file=$1
-FILE_UTF16=$(file $1 | grep -i "utf-16")
-if [[ "$FILE_UTF16" != "" ]];then
-    echo "file format utf-16"
-    iconv -f utf-16le -t utf-8 $1 > utf8-$1
-    file=utf8-$1
-fi
-echo $file
+    file=$1
+    if [ ! -f $file ];then
+        echo "$file is not a file"
+    fi
+    FILE_UTF16=$(file $1 | grep -i "utf-16")
+    if [[ "$FILE_UTF16" != "" ]];then
+        echo "file format utf-16"
+        iconv -f utf-16le -t utf-8 $1 > utf8-$1
+        file=utf8-$1
+    fi
+    echo $file
+}
+
+get_pid_by_keyword() {
+    file=$1
+    KEYWORD=$2
+    pid=`grep -aiE $KEYWORD ${file} | head -n 1`
+    pid=`echo $pid | awk -F " " '{print $3}'`
+    echo $pid
 }
 
 controller_info_get() {
-CONTROLLER_KEYWORD=$1
-file=$2
-LEFT_KEYWORD=${CONTROLLER_KEYWORD}left
-RIGHT_KEYWORD=${CONTROLLER_KEYWORD}right
-#3. left controller version
-TEMP=""
-RESULT=""
-ORI=`grep -aiE $LEFT_KEYWORD ${file}`
-for i in $ORI
-do
-    TEMP=`echo ${i#*sw:}`
-    TEMP=`echo ${TEMP%%,*}`
-    res=$(echo $RESULT | grep "${TEMP: 0:6}")
-    if [[ "$res" = "" ]];then
-        if [[ $RESULT = "" ]];then
-            RESULT=${TEMP: 0:6}
-        else
-            RESULT=${RESULT},${TEMP: 0:6}
+    CONTROLLER_KEYWORD=$1
+    file=$2
+    LEFT_KEYWORD=${CONTROLLER_KEYWORD}left
+    RIGHT_KEYWORD=${CONTROLLER_KEYWORD}right
+    #3. left controller version
+    TEMP=""
+    RESULT=""
+    ORI=`grep -aiE $LEFT_KEYWORD ${file}`
+    for i in $ORI
+    do
+        TEMP=`echo ${i#*sw:}`
+        TEMP=`echo ${TEMP%%,*}`
+        res=$(echo $RESULT | grep "${TEMP: 0:6}")
+        if [[ "$res" = "" ]];then
+            if [[ $RESULT = "" ]];then
+                RESULT=${TEMP: 0:6}
+            else
+                RESULT=${RESULT},${TEMP: 0:6}
+            fi
         fi
-    fi
-done
-echo -e "\033[32m LEFT: \t\t$RESULT\033[0m"
+    done
+    echo -e "\033[32m LEFT: \t\t$RESULT\033[0m"
 
-#4. right controller version
-TEMP=""
-RESULT=""
-ORI=`grep -aiE $RIGHT_KEYWORD ${file}`
-for i in $ORI
-do
-    TEMP=`echo ${i#*sw:}`
-    TEMP=`echo ${TEMP%%,*}`
-    res=$(echo $RESULT | grep "${TEMP: 0:6}")
-    if [[ "$res" = "" ]];then
-        if [[ $RESULT = "" ]];then
-            RESULT=${TEMP: 0:6}
-        else
-            RESULT=${RESULT},${TEMP: 0:6}
+    #4. right controller version
+    TEMP=""
+    RESULT=""
+    ORI=`grep -aiE $RIGHT_KEYWORD ${file}`
+    for i in $ORI
+    do
+        TEMP=`echo ${i#*sw:}`
+        TEMP=`echo ${TEMP%%,*}`
+        res=$(echo $RESULT | grep "${TEMP: 0:6}")
+        if [[ "$res" = "" ]];then
+            if [[ $RESULT = "" ]];then
+                RESULT=${TEMP: 0:6}
+            else
+                RESULT=${RESULT},${TEMP: 0:6}
+            fi
         fi
-    fi
-done
-echo -e "\033[32m RIGHT: \t\t$RESULT\033[0m"
-echo ""
-TEMP=`grep -aiE $LEFT_KEYWORD ${file} | head -n1`
-echo "${TEMP#*$CONTROLLER_KEYWORD}"
-TEMP=`grep -aiE $RIGHT_KEYWORD ${file} | head -n1`
-echo "${TEMP#*$CONTROLLER_KEYWORD}"
+    done
+    echo -e "\033[32m RIGHT: \t\t$RESULT\033[0m"
+    echo ""
+    TEMP=`grep -aiE $LEFT_KEYWORD ${file} | head -n1`
+    echo "${TEMP#*$CONTROLLER_KEYWORD}"
+    TEMP=`grep -aiE $RIGHT_KEYWORD ${file} | head -n1`
+    echo "${TEMP#*$CONTROLLER_KEYWORD}"
 }
 
 #if [ $# -lt 1 ];then
@@ -81,20 +92,25 @@ echo "${TEMP#*$CONTROLLER_KEYWORD}"
 #    file=a.txt
 #fi
 
-file=`trans_2_utf8 $1`
+file=$1
+if [ $1 = '-t' ];then
+    file=$2
+    PARA_ADD='|trackingservice'
+fi
+
+file=`trans_2_utf8 $file`
 
 echo "Input $# files"
 
-grep -ainE ":stlog:" ${file} --color=auto
+grep -anE "STLOG:" ${file} --color=auto
 
 echo ""
-echo -e "=======================================================\n"
+echo "----------------------------------------------------------------------------------------------------------"
 echo ""
 
-#permissive=0'
-#'bb 01 01'
 KEY="
 'Stationservice: L1:Starting'
+'--------- beginning of'
 'camera res'
 'enterpairing'
 'stoppairing'
@@ -133,10 +149,11 @@ KEY="
 'pairmode'
 'do_inplay618_controller_update'
 'do_inplay618_station_update'
-'do_inplay618_station_update'
-'RBWrite overflow RightShift'
 'RBWrite overflow RightShift'
 'GetCalibrationFromStation:mcu recv wrong'
+'GetCalibrationFromStation:mcu recv cali'
+'GetCalibrationFromStation'
+'controller get calibration data timeout'
 'get calibration data successfully'
 '================6dof camera'
 ':aa 01 04 01'
@@ -145,23 +162,44 @@ KEY="
 ']a5 02 02'
 ']a5 07 00'
 ']a5 06 '
+'手柄已断开连接'
 'qcom,qup_uart'
+#'permissive=0'
+#'bb 01 01'
+#':aa 01 fa'
+#'SlpiDataAnalyze'
+#'keyDataAnalyze'
+#'imuDataAnalyze'
 "
+CHATTY_LOG="|I chatty  : uid="
 
-#'mControllerStillFlag_'
 KEYWORDS=`echo -e ${KEY} | sed "s/' '/|/g"`
 KEYWORDS=`echo -e ${KEYWORDS} | sed "s/'//g"`
-echo $KEYWORDS
-grep -ainE "${KEYWORDS}" ${file} --color=auto
+KEYWORDS=`echo "$KEYWORDS" | awk -F '#' '{print $1}'`
+KEYWORDS=${KEYWORDS::-1} #cut last 1 chars
+KEYWORDS_EXPAND=$KEYWORDS$CHATTY_LOG
+
+FILE_TMP="ss.tmp"
+SS_KEY="E Stationservice: L"
+grep -ainE "${KEYWORDS_EXPAND}" ${file} > $FILE_TMP
+PID_SS=`get_pid_by_keyword $FILE_TMP $SS_KEY`
+echo "PID=$PID_SS"
+KEYWORDS_EXPAND="$KEYWORDS|  $PID_SS  "
+echo $KEYWORDS_EXPAND
+echo "----------------------------------------------------------------------------------------------------------"
+grep -ainE "${KEYWORDS_EXPAND}" ${FILE_TMP} --color=auto
 
 
-
+PARA_ADD=$PARA_ADD$CHATTY_LOG
+echo $PARA_ADD
 fileo=ss.${file}
-grep -aiE "${KEYWORDS}|stationservice|stationclient" ${file} > ${fileo}
+KEYWORDS_FILE="${KEYWORDS}|stationservice|stationclient${PARA_ADD}"
+echo $KEYWORDS_FILE
+grep -aiE "${KEYWORDS_FILE}" ${file} > ${fileo}
 echo "output in ${fileo}"
 
 echo ""
-echo -e "=======================================================\n"
+echo "----------------------------------------------------------------------------------------------------------"
 
 #0. hardware info
 KEY_H="come in wakeup, "
