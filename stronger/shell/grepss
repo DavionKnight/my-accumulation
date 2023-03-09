@@ -95,7 +95,7 @@ controller_info_get() {
 file=$1
 if [ $1 = '-t' ];then
     file=$2
-    PARA_ADD='|trackingservice'
+    PARA_ADD='|pvrtrackingservice'
 fi
 
 file=`trans_2_utf8 $file`
@@ -164,7 +164,9 @@ KEY="
 ']a5 02 02'
 ']a5 07 00'
 ']a5 06 '
+'jni_part\('
 '手柄已断开连接'
+'\[EXPOSURE-ERROR-'
 'qcom,qup_uart'
 #'permissive=0'
 #'bb 01 01'
@@ -195,10 +197,10 @@ rm  ${FILE_TMP}
 
 fileo=sso.${file}
 ssfile=ss.${file}
-KEYWORDS_FILE="${KEYWORDS}|stationservice|stationclient${PARA_ADD}${CHATTY_LOG}"
+KEYWORDS_FILE="${KEYWORDS}|stationservice|keydataanalyze|imudataanalyze|stationclient${PARA_ADD}${CHATTY_LOG}"
 echo $KEYWORDS_FILE
 grep -aiE "${KEYWORDS_FILE}" ${file} > ${fileo}
-KEYWORDS_EXPAND="${KEYWORDS}|stationservice|stationclient${PARA_ADD}|  $PID_SS  "
+KEYWORDS_EXPAND="${KEYWORDS}|stationservice|keydataanalyze|imudataanalyze|stationclient${PARA_ADD}|  $PID_SS  "
 grep -aiE "${KEYWORDS_EXPAND}" ${fileo} > ${ssfile}
 rm  ${fileo}
 echo "output in ${ssfile}"
