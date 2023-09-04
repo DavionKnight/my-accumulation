@@ -97,6 +97,14 @@ if [ $1 = '-t' ];then
     file=$2
     PARA_ADD='|pvrtrackingservice'
 fi
+if [ $1 = '-m' ];then
+    file=$2
+    if [ -f a.txt ];then
+        rm a.txt
+    fi
+    ls ${file}* | sort -r | xargs cat >> a.txt
+    file="a.txt"
+fi
 
 file=`trans_2_utf8 $file`
 
@@ -115,7 +123,9 @@ KEY="
 'enterpairing'
 'stoppairing'
 'usbpairing'
+'bpspitest'
 'system_vrmode'
+'system_shutdown'
 '\[mcu\]powero'
 'devinfo:'
 'come in wakeup'
@@ -126,9 +136,15 @@ KEY="
 'get_imu_cali_thread'
 'controller disconnect'
 'controller info:'
+'DeviceTypeGet,'
+'controllertype get devicemodel'
+'controllertype get'
 'camerainit'
+'camerasingleinit'
 'camerargbsync'
 'camerastreamctrl'
+'setcamerafps'
+'onSetCameraFPSReadyNotify'
 '>>> \/'
 'reset station'
 'scontext=u:r:stationservice:s0'
@@ -146,6 +162,7 @@ KEY="
 'controller: /storage/emulated'
 'bootrom'
 'station update'
+'stationupgrade'
 'pairmode'
 'do_inplay618_controller_update'
 'do_inplay618_station_update'
@@ -156,19 +173,20 @@ KEY="
 'get calibration data successfully'
 '================6dof camera'
 'PvrTrackingService: start 6dof by wakeup'
-'Check system 6Dof status'
 ':aa 01 04 01'
 ']bb 01 04 01'
 ']a5 02 01'
 ']a5 02 02'
 ']a5 07 00'
 ']a5 06 '
-'jni_part\('
 'sota'
 'sota_dev_insert'
+'sota_dev_reinsert'
+'update_SilentOTA_support_config'
 '手柄已断开连接'
 '\[EXPOSURE-ERROR-'
 'qcom,qup_uart'
+#'jni_part\('
 #'RBWrite overflow RightShift'
 #'permissive=0'
 #'bb 01 01'
@@ -254,7 +272,7 @@ if [[ "$ORI" = "" ]];then
 fi
 controller_info_get $CONTROLLER_KEYWORD $file
 
-
+grep -iE "Stationservice: L1:Starting|come in wakeup" ${file}
 
 IFS=$SAVEIFS
 
